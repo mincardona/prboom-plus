@@ -181,6 +181,8 @@ static hu_textline_t  w_ammo_big;
 static hu_textline_t  w_ammo_icon;
 static hu_textline_t  w_keys_icon;
 
+static hu_textline_t  w_medict_berserk_icon_big;
+
 static dboolean    always_off = false;
 static char       chat_dest[MAXPLAYERS];
 dboolean           chat_on;
@@ -410,6 +412,8 @@ void HU_Init(void)
   R_SetPatchNum(&hu_font_hud[12], "STTPRCNT");
   R_SetPatchNum(&hu_font_hud[13], "STTPRCNT");
 
+  R_SetSpriteByIndex(&hu_font_hud[14], SPR_PSTR);
+
   R_SetPatchByName(&hu_font_hud[30], "HUDMED");
   R_SetPatchByName(&hu_font_hud[31], "HUDARM1");
   R_SetPatchByName(&hu_font_hud[32], "HUDARM1");
@@ -514,6 +518,16 @@ void HU_Start(void)
   HUlib_initTextLine
   (
     &w_medict_icon_big,
+    0, 0,
+    hu_font_hud,
+    HU_FONTSTART,
+    CR_RED,
+    VPT_NONE
+  );
+
+  HUlib_initTextLine
+  (
+    &w_medict_berserk_icon_big,
     0, 0,
     hu_font_hud,
     HU_FONTSTART,
@@ -1049,6 +1063,9 @@ void HU_widget_draw_medict_icon_custom(void);
 void HU_widget_build_armor_icon_custom(void);
 void HU_widget_draw_armor_icon_custom(void);
 
+void HU_widget_build_medict_berserk_icon_big(void);
+void HU_widget_draw_medict_berserk_icon_big(void);
+
 void HU_widget_build_medict_percent(void);
 void HU_widget_draw_medict_percent(void);
 void HU_widget_build_armor_percent(void);
@@ -1095,6 +1112,8 @@ static hud_widget_t hud_name_widget[] =
   {&w_ammo_big,  0, 0, VPT_NOOFFSET, HU_widget_build_ammo_big,  HU_widget_draw_ammo_big,  "ammo_big"},
   {&w_ammo_icon, 0, 0, VPT_NOOFFSET, HU_widget_build_ammo_icon, HU_widget_draw_ammo_icon, "ammo_icon"},
   {&w_ammo_icon, 0, 0, VPT_NOOFFSET, HU_widget_build_ammo_icon, HU_widget_draw_ammo_icon, "ammo_icon"},
+
+  {&w_medict_berserk_icon_big, 0, 0, VPT_NOOFFSET, HU_widget_build_medict_berserk_icon_big, HU_widget_draw_medict_berserk_icon_big, "medict_berserk_icon_big"},
 
   {NULL, 0, 0, 0, NULL, NULL, NULL}
 };
@@ -1499,6 +1518,21 @@ void HU_widget_build_armor_icon_custom(void)
 void HU_widget_draw_armor_icon_custom(void)
 {
   HUlib_drawTextLine(&w_armor_icon_custom, false);
+}
+
+void HU_widget_build_medict_berserk_icon_big(void)
+{
+  HUlib_clearTextLine(&w_medict_berserk_icon_big);
+  if (plr->powers[pw_strength]) {
+    HUlib_addCharToTextLine(&w_medict_berserk_icon_big, '!' + 14);
+  } else {
+    HUlib_addCharToTextLine(&w_medict_berserk_icon_big, '!' + 4);
+  }
+}
+
+void HU_widget_draw_medict_berserk_icon_big(void)
+{
+  HUlib_drawTextLine(&w_medict_berserk_icon_big, false);
 }
 
 void HU_widget_build_armor(void)
