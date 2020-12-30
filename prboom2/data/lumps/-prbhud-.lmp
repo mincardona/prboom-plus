@@ -126,6 +126,10 @@ armor_icon_small -316 -197
 armor_big -298 -198
 
 hud 13
+bammo 2 108
+sammo 2 116
+rammo 2 124
+cammo 2 132
 tracers 2 151
 hudadd 2 159
 monsec 2 167
