@@ -159,6 +159,10 @@ static hu_textline_t  w_weapon; //jff 2/16/98 new weapon widget for hud
 static hu_textline_t  w_keys;   //jff 2/16/98 new keys widget for hud
 static hu_textline_t  w_gkeys;  //jff 3/7/98 graphic keys widget for hud
 static hu_textline_t  w_monsec; //jff 2/16/98 new kill/secret widget for hud
+static hu_textline_t  w_bammo;  // bullet ammo counter
+static hu_textline_t  w_sammo;  // shell ammo counter
+static hu_textline_t  w_rammo;  // rocket ammo counter
+static hu_textline_t  w_cammo;  // cell ammo counter
 static hu_mtext_t     w_rtext;  //jff 2/26/98 text message refresh widget
 
 static hu_textline_t  w_map_monsters;  //e6y monsters widget for automap
@@ -219,6 +223,10 @@ static char hud_weapstr[80];
 static char hud_keysstr[80];
 static char hud_gkeysstr[80]; //jff 3/7/98 add support for graphic key display
 static char hud_monsecstr[80];
+static char hud_bammostr[12];
+static char hud_sammostr[12];
+static char hud_rammostr[12];
+static char hud_cammostr[12];
 
 //
 // Builtin map names.
@@ -675,6 +683,46 @@ void HU_Start(void)
 
   HUlib_initTextLine
   (
+    &w_bammo,
+    0, 0,
+    hu_font2,
+    HU_FONTSTART,
+    CR_GRAY,
+    VPT_NONE
+  );
+
+  HUlib_initTextLine
+  (
+    &w_sammo,
+    0, 0,
+    hu_font2,
+    HU_FONTSTART,
+    CR_GRAY,
+    VPT_NONE
+  );
+
+  HUlib_initTextLine
+  (
+    &w_rammo,
+    0, 0,
+    hu_font2,
+    HU_FONTSTART,
+    CR_GRAY,
+    VPT_NONE
+  );
+
+  HUlib_initTextLine
+  (
+    &w_cammo,
+    0, 0,
+    hu_font2,
+    HU_FONTSTART,
+    CR_GRAY,
+    VPT_NONE
+  );
+
+  HUlib_initTextLine
+  (
     &w_medict_percent,
     0, 0,
     hu_font_hud,
@@ -952,6 +1000,11 @@ void HU_Start(void)
   //jff 2/17/98 initialize kills/items/secret widget
   strcpy(hud_monsecstr,"STS ");
 
+  strcpy(hud_bammostr, "B:");
+  strcpy(hud_sammostr, "S:");
+  strcpy(hud_rammostr, "R:");
+  strcpy(hud_cammostr, "C:");
+
   // create the chat widget
   HUlib_initIText
   (
@@ -1036,6 +1089,14 @@ void HU_widget_build_keys(void);
 void HU_widget_draw_keys(void);
 void HU_widget_build_monsec(void);
 void HU_widget_draw_monsec(void);
+void HU_widget_build_bammo(void);
+void HU_widget_draw_bammo(void);
+void HU_widget_build_sammo(void);
+void HU_widget_draw_sammo(void);
+void HU_widget_build_rammo(void);
+void HU_widget_draw_rammo(void);
+void HU_widget_build_cammo(void);
+void HU_widget_draw_cammo(void);
 void HU_widget_build_health(void);
 void HU_widget_draw_health(void);
 void HU_widget_build_armor(void);
@@ -1114,6 +1175,11 @@ static hud_widget_t hud_name_widget[] =
   {&w_ammo_icon, 0, 0, VPT_NOOFFSET, HU_widget_build_ammo_icon, HU_widget_draw_ammo_icon, "ammo_icon"},
 
   {&w_medict_berserk_icon_big, 0, 0, VPT_NOOFFSET, HU_widget_build_medict_berserk_icon_big, HU_widget_draw_medict_berserk_icon_big, "medict_berserk_icon_big"},
+
+  {&w_bammo, 0, 0, 0, HU_widget_build_bammo, HU_widget_draw_bammo, "bammo"},
+  {&w_sammo, 0, 0, 0, HU_widget_build_sammo, HU_widget_draw_sammo, "sammo"},
+  {&w_rammo, 0, 0, 0, HU_widget_build_rammo, HU_widget_draw_rammo, "rammo"},
+  {&w_cammo, 0, 0, 0, HU_widget_build_cammo, HU_widget_draw_cammo, "cammo"},
 
   {NULL, 0, 0, 0, NULL, NULL, NULL}
 };
@@ -2029,6 +2095,55 @@ void HU_widget_build_monsec(void)
 void HU_widget_draw_monsec(void)
 {
   HUlib_drawTextLine(&w_monsec, false);
+}
+
+static void widget_build_xammo(char prefix, ammotype_t ammotype, char* textbuf, hu_textline_t* widget) {
+  const char* s = textbuf;
+  int ammo_amt = plr->ammo[ammotype];
+  int ammo_max = plr->maxammo[ammotype];
+
+  HUlib_clearTextLine(widget);
+
+  // TODO: ammo amount colors
+  // TODO: monospacing and padding of numbers
+
+  snprintf(textbuf, 11, "%c: %3d/%3d", prefix, ammo_amt, ammo_max);
+
+  while (*s) {
+    HUlib_addCharToTextLine(widget, *(s++));
+  }
+}
+
+void HU_widget_build_bammo(void) {
+  widget_build_xammo('B', am_clip, hud_bammostr, &w_bammo);
+}
+
+void HU_widget_draw_bammo(void) {
+  HUlib_drawTextLine(&w_bammo, false);
+}
+
+void HU_widget_build_sammo(void) {
+  widget_build_xammo('S', am_shell, hud_sammostr, &w_sammo);
+}
+
+void HU_widget_draw_sammo(void) {
+  HUlib_drawTextLine(&w_sammo, false);
+}
+
+void HU_widget_build_rammo(void) {
+  widget_build_xammo('R', am_misl, hud_rammostr, &w_rammo);
+}
+
+void HU_widget_draw_rammo(void) {
+  HUlib_drawTextLine(&w_rammo, false);
+}
+
+void HU_widget_build_cammo(void) {
+  widget_build_xammo('C', am_cell, hud_cammostr, &w_cammo);
+}
+
+void HU_widget_draw_cammo(void) {
+  HUlib_drawTextLine(&w_cammo, false);
 }
 
 void HU_widget_build_hudadd(void)
