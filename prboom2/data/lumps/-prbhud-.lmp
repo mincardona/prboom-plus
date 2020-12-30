@@ -125,8 +125,19 @@ health_big 22 -198
 armor_icon_small -316 -197
 armor_big -298 -198
 
+hud 13
+tracers 2 151
+hudadd 2 159
+monsec 2 167
+keys 2 175
+weapon 2 183
+ammo 2 191
+medict_berserk_icon_big 242 -178
+health_big -316 -178
+armor_icon_big 240 -198
+armor_big -316 -198
 
-;hud 13
+;hud 14
 ;tracers 2 151
 ;hudadd 2 159
 ;monsec 2 167
