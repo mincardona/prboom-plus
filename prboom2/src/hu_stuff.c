@@ -690,6 +690,7 @@ void HU_Start(void)
     CR_GRAY,
     VPT_NONE
   );
+  w_bammo.spcwidth = 5;  // monospace so ammo counts align
 
   HUlib_initTextLine
   (
@@ -700,6 +701,7 @@ void HU_Start(void)
     CR_GRAY,
     VPT_NONE
   );
+  w_sammo.spcwidth = 5;
 
   HUlib_initTextLine
   (
@@ -710,6 +712,7 @@ void HU_Start(void)
     CR_GRAY,
     VPT_NONE
   );
+  w_rammo.spcwidth = 5;
 
   HUlib_initTextLine
   (
@@ -720,6 +723,7 @@ void HU_Start(void)
     CR_GRAY,
     VPT_NONE
   );
+  w_cammo.spcwidth = 5;
 
   HUlib_initTextLine
   (

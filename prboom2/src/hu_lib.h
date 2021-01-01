@@ -66,6 +66,8 @@ typedef struct
   int   y;
   int   w;
   int   val;
+  // width to draw space characters (ASCII 0x20) as, in pixels
+  int   spcwidth;
 
   const patchnum_t* f;                    // font
   int   sc;                             // start character

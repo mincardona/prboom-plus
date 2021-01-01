@@ -88,6 +88,7 @@ void HUlib_initTextLine(hu_textline_t* t, int x, int y,
   t->x = x;
   t->y = y;
   t->val = -1;
+  t->spcwidth = 4;
   t->f = f;
   t->sc = sc;
   t->cm = cm;
@@ -176,7 +177,7 @@ void HUlib_drawTextLine
       else if (c != ' ' && c >= l->sc && c <= 127)
         l->w += l->f[c - l->sc].width;
       else
-        l->w += 4;
+        l->w += l->spcwidth;
     }
   }
 
@@ -210,7 +211,7 @@ void HUlib_drawTextLine
     }
     else
     {
-      x += 4;
+      x += l->spcwidth;
       if (x >= BASE_WIDTH)
       break;
     }
@@ -814,7 +815,7 @@ void HUlib_setTextXCenter(hu_textline_t* t)
   while (*s)
   {
     int c = toupper(*(s++)) - HU_FONTSTART;
-    t->x -= (c < 0 || c > HU_FONTSIZE ? 4 : t->f[c].width);
+    t->x -= (c < 0 || c > HU_FONTSIZE ? t->spcwidth : t->f[c].width);
   }
   if (t->x < 0)
     t->x = 0;
